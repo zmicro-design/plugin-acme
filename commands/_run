@@ -1,0 +1,40 @@
+#!/bin/bash
+
+help() {
+  echo "zacme - make let's encrypt easily"
+  echo "  powered by acme.sh"
+  echo ""
+  echo "Usage:"
+  echo "  zacme [global options] command [command options] [arguments...]"
+  echo "  "
+
+  acme.sh --help
+}
+
+dependency_check() {
+  which acme.sh >>/dev/null 2>&1
+  if [ "$?" != "0" ]; then
+    zmicro plugin run package install acme
+  fi
+}
+
+core() {
+  # Load
+  # . $PLUGIN_ACME_ENV
+  export PATH=$PLUGIN_ACME_DIR:$PATH
+
+  dependency_check
+
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  acme.sh "$@"
+}
+
+run() {
+  core "$@"
+}
+
+run "$@"

@@ -1,0 +1,3 @@
+# Custom Config
+export PLUGIN_ACME_DIR=$HOME/.acme.sh
+export PLUGIN_ACME_ENV=$HOME/.acme.sh/.acme.env
