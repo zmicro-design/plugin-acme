@@ -11,4 +11,4 @@ services:
     #   DEBUG: 'true'
     volumes:
       - /tmp/data/ssl:/data/ssl
-      - /tmp/data/acme:/root/.acme.sh
+      # - /tmp/data/acme:/root/.acme.sh
