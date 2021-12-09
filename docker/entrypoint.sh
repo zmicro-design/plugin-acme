@@ -10,10 +10,15 @@ if [ -z "$MAIN_DOMAIN" ]; then
   exit 1
 fi
 
-if [ -z "$DOMAINS" ]; then
-  echo "Error: DOMAINS is required"
-  exit 1
-fi
+# if [ -z "$DOMAINS" ]; then
+#   echo "Error: DOMAINS is required"
+#   exit 1
+# fi
+
+# if [ -z "$SUB_DOMAINS" ]; then
+#   echo "Error: SUB_DOMAINS is required"
+#   exit 1
+# fi
 
 if [ -z "CLIENT_PROVIDER" ]; then
   echo "Error: CLIENT_PROVIDER is required"
@@ -60,12 +65,30 @@ case $CLIENT_PROVIDER in
 esac 
 
 
-DOMAINS_ARRAY=($(echo $DOMAINS | awk -F ',' '{out=""; for(i=1;i<=NF;i++){out=out" "$i}; print out}'))
-
 COMMAND_DOMAIN="-d $MAIN_DOMAIN"
-for d in ${DOMAINS_ARRAY[@]}; do
-  COMMAND_DOMAIN="$COMMAND_DOMAIN -d $d"
-done
+
+# Example:
+#   DOMAINS=*.example.com,*.t.example.com
+if [ -n "$DOMAINS" ]; then
+  DOMAINS_ARRAY=($(echo $DOMAINS | awk -F ',' '{out=""; for(i=1;i<=NF;i++){out=out" "$i}; print out}'))
+
+  for d in ${DOMAINS_ARRAY[@]}; do
+    COMMAND_DOMAIN="$COMMAND_DOMAIN -d $d"
+  done
+fi
+
+# Example:
+#   SUB_DOMAINS=*,*.t
+#  
+#   equals:
+#     DOMAINS=*.example.com,*.t.example.com
+if [ -n "$SUB_DOMAINS" ]; then
+  DOMAINS_ARRAY=($(echo $SUB_DOMAINS | awk -F ',' '{out=""; for(i=1;i<=NF;i++){out=out" "$i}; print out}'))
+
+  for d in ${DOMAINS_ARRAY[@]}; do
+    COMMAND_DOMAIN="$COMMAND_DOMAIN -d $d.$MAIN_DOMAIN"
+  done
+fi
 
 # 1. Get Cert
 COMMAND="zmicro acme --issue --dns dns_$CLIENT_PROVIDER $COMMAND_DOMAIN"
