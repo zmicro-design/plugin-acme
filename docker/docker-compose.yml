@@ -2,12 +2,13 @@ version: '3.7'
 
 services:
   acme:
-    build:
-      context: .
+    # build:
+    #   context: ..
+    image: whatwewant/acme:v0.0.3
     env_file:
-      - .env
+      - /tmp/.env
     # environment:
     #   DEBUG: 'true'
     volumes:
-      - ./data/ssl:/data/ssl
-      - ./data/acme:/root/.acme.sh
+      - /tmp/data/ssl:/data/ssl
+      - /tmp/data/acme:/root/.acme.sh
