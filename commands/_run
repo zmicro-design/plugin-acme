@@ -31,6 +31,7 @@ core() {
   fi
 
   acme.sh "$@"
+  # bash $HOME/.acme.sh/acme.sh "$@"
 }
 
 run() {
